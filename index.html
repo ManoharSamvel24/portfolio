@@ -6,8 +6,19 @@
   <title>Manohar Samvel — Software Developer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <!-- Replaced Syne with Plus Jakarta Sans for the hero name — cleaner, more readable, still bold -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Override: swap display font from Syne → Plus Jakarta Sans */
+    :root { --font-display: 'Plus Jakarta Sans', sans-serif; }
+
+    /* Fix hero name size — was too large on mobile */
+    .hero-name {
+      font-size: clamp(40px, 10vw, 84px);
+      letter-spacing: -2px;
+    }
+  </style>
 </head>
 <body>
 
