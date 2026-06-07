@@ -28,11 +28,12 @@ mobileLinks.forEach(link => {
    TYPED TEXT
 =========================== */
 const roles = [
-  'Software Developer',
+  'Mobile App Developer',
+  'Flutter Developer',
+  'Android · Java + XML',
+  'iOS · Ionic Framework',
   'Java Backend Engineer',
   'Spring Boot Developer',
-  'REST API Builder',
-  'Linux Power User',
 ];
 
 let roleIndex = 0;
@@ -49,15 +50,15 @@ function type() {
     typedEl.textContent = current.substring(0, ++charIndex);
   }
 
-  let delay = isDeleting ? 38 : 78;
+  let delay = isDeleting ? 36 : 72;
 
   if (!isDeleting && charIndex === current.length) {
-    delay = 1900;
+    delay = 1800;
     isDeleting = true;
   } else if (isDeleting && charIndex === 0) {
     isDeleting = false;
     roleIndex = (roleIndex + 1) % roles.length;
-    delay = 380;
+    delay = 360;
   }
 
   setTimeout(type, delay);
@@ -79,7 +80,7 @@ const revealObserver = new IntersectionObserver(
       }
     });
   },
-  { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+  { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
 );
 
 revealEls.forEach(el => revealObserver.observe(el));
@@ -120,8 +121,8 @@ hero.addEventListener('mousemove', (e) => {
   const y = (e.clientY - rect.top) / rect.height;
   const orb1 = hero.querySelector('.orb-1');
   const orb2 = hero.querySelector('.orb-2');
-  if (orb1) orb1.style.transform = `translate(${(x - 0.5) * 40}px, ${(y - 0.5) * 30}px)`;
-  if (orb2) orb2.style.transform = `translate(${(0.5 - x) * 28}px, ${(0.5 - y) * 28}px)`;
+  if (orb1) orb1.style.transform = `translate(${(x - 0.5) * 38}px, ${(y - 0.5) * 28}px)`;
+  if (orb2) orb2.style.transform = `translate(${(0.5 - x) * 26}px, ${(0.5 - y) * 26}px)`;
 });
 
 hero.addEventListener('mouseleave', () => {
@@ -149,8 +150,18 @@ tiltCards.forEach(card => {
   });
 
   card.addEventListener('mouseleave', () => {
-    card.style.transition = 'transform 0.55s ease, border-color 0.3s, box-shadow 0.3s';
+    card.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1), border-color 0.3s, box-shadow 0.3s';
     card.style.transform = '';
-    setTimeout(() => { card.style.transition = ''; }, 560);
+    setTimeout(() => { card.style.transition = ''; }, 520);
   });
 });
+
+/* ===========================
+   DISABLE TILT ON TOUCH
+=========================== */
+if ('ontouchstart' in window) {
+  tiltCards.forEach(card => {
+    card.onmousemove = null;
+    card.onmouseleave = null;
+  });
+}
