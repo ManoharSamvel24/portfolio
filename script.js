@@ -1,167 +1,173 @@
-/* ===========================
-   NAVIGATION
-=========================== */
-const nav = document.getElementById('nav');
+// ============================================
+// 1. TYPING EFFECT
+// ============================================
+const typedText = document.getElementById('typedText');
+const roles = [
+    'Mobile App Developer',
+    'Flutter · Android · iOS',
+    'Java · Spring Boot',
+    'Full-Stack Enthusiast'
+];
+let roleIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let typingSpeed = 80;
+
+function typeEffect() {
+    const currentRole = roles[roleIndex];
+    if (isDeleting) {
+        typedText.textContent = currentRole.substring(0, charIndex - 1);
+        charIndex--;
+        typingSpeed = 40;
+    } else {
+        typedText.textContent = currentRole.substring(0, charIndex + 1);
+        charIndex++;
+        typingSpeed = 80;
+    }
+
+    if (!isDeleting && charIndex === currentRole.length) {
+        isDeleting = true;
+        typingSpeed = 1500; // pause before deleting
+    } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+        typingSpeed = 400;
+    }
+
+    setTimeout(typeEffect, typingSpeed);
+}
+
+document.addEventListener('DOMContentLoaded', typeEffect);
+
+// ============================================
+// 2. CUSTOM CURSOR
+// ============================================
+const cursor = document.getElementById('customCursor');
+const dot = cursor.querySelector('.cursor-dot');
+const ring = cursor.querySelector('.cursor-ring');
+
+let mouseX = 0,
+    mouseY = 0;
+let ringX = 0,
+    ringY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+});
+
+function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
+    requestAnimationFrame(animateRing);
+}
+
+animateRing();
+
+// Hide cursor on touch devices
+if ('ontouchstart' in window) {
+    cursor.style.display = 'none';
+    document.body.style.cursor = 'auto';
+    document.querySelectorAll('a, button, input, textarea').forEach(el => el.style.cursor = 'auto');
+}
+
+// ============================================
+// 3. MAGNETIC BUTTONS
+// ============================================
+document.querySelectorAll('.btn-primary, .btn-ghost, .card-cta, .proj-link, .social-link, .hamburger').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate(0, 0)';
+    });
+});
+
+// ============================================
+// 4. TILT EFFECT ON PROJECT CARDS
+// ============================================
+document.querySelectorAll('.project-card, .skill-card, .timeline-content, .card-inner, .contact-card-inner').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(600px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translate(-3px, -3px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg) translate(0, 0)';
+    });
+});
+
+// ============================================
+// 5. SCROLL REVEAL (Intersection Observer)
+// ============================================
+const revealElements = document.querySelectorAll('.reveal-up, .reveal-left');
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
+});
+
+revealElements.forEach(el => observer.observe(el));
+
+// ============================================
+// 6. SCROLL PROGRESS BAR
+// ============================================
+const progressBar = document.querySelector('.scroll-progress-bar');
+
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    progressBar.style.width = progress + '%';
+});
+
+// ============================================
+// 7. MOBILE MENU (Hamburger)
+// ============================================
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 const mobileLinks = document.querySelectorAll('.mobile-link');
 
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-});
-
 hamburger.addEventListener('click', () => {
-  const open = hamburger.classList.toggle('open');
-  mobileMenu.classList.toggle('open', open);
-  document.body.style.overflow = open ? 'hidden' : '';
+    hamburger.classList.toggle('active');
+    mobileMenu.classList.toggle('open');
 });
 
 mobileLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    hamburger.classList.remove('open');
-    mobileMenu.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-});
-
-/* ===========================
-   TYPED TEXT
-=========================== */
-const roles = [
-  'Mobile App Developer',
-  'Flutter Developer',
-  'Android · Java + XML',
-  'iOS · Ionic Framework',
-  'Java Backend Engineer',
-  'Spring Boot Developer',
-];
-
-let roleIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
-const typedEl = document.getElementById('typedText');
-
-function type() {
-  const current = roles[roleIndex];
-
-  if (isDeleting) {
-    typedEl.textContent = current.substring(0, --charIndex);
-  } else {
-    typedEl.textContent = current.substring(0, ++charIndex);
-  }
-
-  let delay = isDeleting ? 36 : 72;
-
-  if (!isDeleting && charIndex === current.length) {
-    delay = 1800;
-    isDeleting = true;
-  } else if (isDeleting && charIndex === 0) {
-    isDeleting = false;
-    roleIndex = (roleIndex + 1) % roles.length;
-    delay = 360;
-  }
-
-  setTimeout(type, delay);
-}
-
-setTimeout(type, 700);
-
-/* ===========================
-   SCROLL REVEAL
-=========================== */
-const revealEls = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right');
-
-const revealObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        revealObserver.unobserve(e.target);
-      }
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
     });
-  },
-  { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-);
-
-revealEls.forEach(el => revealObserver.observe(el));
-
-/* ===========================
-   ACTIVE NAV LINK
-=========================== */
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-links a');
-
-const sectionObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        const id = e.target.getAttribute('id');
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${id}`) {
-            link.classList.add('active');
-          }
-        });
-      }
-    });
-  },
-  { threshold: 0.4 }
-);
-
-sections.forEach(s => sectionObserver.observe(s));
-
-/* ===========================
-   HERO PARALLAX ORBS
-=========================== */
-const hero = document.getElementById('hero');
-
-hero.addEventListener('mousemove', (e) => {
-  const rect = hero.getBoundingClientRect();
-  const x = (e.clientX - rect.left) / rect.width;
-  const y = (e.clientY - rect.top) / rect.height;
-  const orb1 = hero.querySelector('.orb-1');
-  const orb2 = hero.querySelector('.orb-2');
-  if (orb1) orb1.style.transform = `translate(${(x - 0.5) * 38}px, ${(y - 0.5) * 28}px)`;
-  if (orb2) orb2.style.transform = `translate(${(0.5 - x) * 26}px, ${(0.5 - y) * 26}px)`;
 });
 
-hero.addEventListener('mouseleave', () => {
-  const orb1 = hero.querySelector('.orb-1');
-  const orb2 = hero.querySelector('.orb-2');
-  if (orb1) { orb1.style.transition = 'transform 1s ease'; orb1.style.transform = ''; }
-  if (orb2) { orb2.style.transition = 'transform 1s ease'; orb2.style.transform = ''; }
-  setTimeout(() => {
-    if (orb1) orb1.style.transition = '';
-    if (orb2) orb2.style.transition = '';
-  }, 1000);
+// ============================================
+// 8. NAV HIDE ON SCROLL DOWN
+// ============================================
+let lastScroll = 0;
+const nav = document.getElementById('nav');
+
+window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+    if (currentScroll > 100) {
+        if (currentScroll > lastScroll) {
+            nav.style.transform = 'translateY(-100%)';
+        } else {
+            nav.style.transform = 'translateY(0)';
+        }
+    } else {
+        nav.style.transform = 'translateY(0)';
+    }
+    lastScroll = currentScroll;
 });
-
-/* ===========================
-   CARD TILT (subtle 3D)
-=========================== */
-const tiltCards = document.querySelectorAll('.skill-card, .project-card');
-
-tiltCards.forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top)  / rect.height - 0.5;
-    card.style.transform = `translateY(-4px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg)`;
-  });
-
-  card.addEventListener('mouseleave', () => {
-    card.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1), border-color 0.3s, box-shadow 0.3s';
-    card.style.transform = '';
-    setTimeout(() => { card.style.transition = ''; }, 520);
-  });
-});
-
-/* ===========================
-   DISABLE TILT ON TOUCH
-=========================== */
-if ('ontouchstart' in window) {
-  tiltCards.forEach(card => {
-    card.onmousemove = null;
-    card.onmouseleave = null;
-  });
-}
