@@ -4,8 +4,8 @@
 const typedText = document.getElementById('typedText');
 const roles = [
     'Mobile App Developer',
-    'Flutter · Android · iOS',
-    'Java · Spring Boot',
+    'Android & iOS Development',
+    'Java · Spring Boot · REST API',
     'Full-Stack Enthusiast'
 ];
 let roleIndex = 0;
