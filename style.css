@@ -663,7 +663,27 @@ textarea {
 }
 
 .skill-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
     font-size: 1.8rem;
+}
+
+.skill-icon img {
+    width: 24px;
+    height: 24px;
+}
+
+.info-icon img {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* If you want to change color via CSS, use this trick */
+.skill-icon img {
+    filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
 }
 
 .skill-card-header h3 {
